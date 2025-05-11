@@ -55,6 +55,19 @@ namespace WordPressApiTests
             Assert.That(UniversalMethods.IsStatusCodeOk(response), "API should be accessible");
 
         }
+        [Test]
+        public async Task Smoke_Post_Put_Check()
+        {
+            var fastPostResponse = await UniversalMethods.SendPostRequest($"{WordPressPostLifecycle.BaseUrl}/posts",WordPressPostLifecycle.client);
+            Assert.That(UniversalMethods.IsStatusCodeCreated(fastPostResponse), "Post should be created");
+            var fastCreatedPost = await UniversalMethods.DeserializeResponse<WordPressPost>(fastPostResponse);
+            Assert.That(fastCreatedPost.Id, Is.GreaterThan(0), "Created post should have an ID");
+            var fastEditResponse = await UniversalMethods.SendPutRequest($"{WordPressPostLifecycle.BaseUrl}/posts/{fastCreatedPost.Id}", WordPressPostLifecycle.client);
+            Assert.That(UniversalMethods.IsStatusCodeOk(fastEditResponse));
+            var fastUpdatedPost = await UniversalMethods.DeserializeResponse<WordPressPost>(fastEditResponse);
+            Assert.That(fastUpdatedPost.Id, Is.EqualTo(fastCreatedPost.Id), "Post ID should remain the same");
+
+        }
  
         [Test]
 
@@ -78,7 +91,7 @@ namespace WordPressApiTests
  
            
  
-            var createResponse = await UniversalMethods.SendPostRequest($"{WordPressPostLifecycle.BaseUrl}/posts", createData,WordPressPostLifecycle.client);
+            var createResponse = await UniversalMethods.SendPostRequest($"{WordPressPostLifecycle.BaseUrl}/posts",WordPressPostLifecycle.client,createData);
 
             var createTime = (DateTime.Now - createStartTime).TotalMilliseconds;
 
@@ -113,7 +126,7 @@ namespace WordPressApiTests
 
             };
  
-            var editResponse = await UniversalMethods.SendPutRequest($"{WordPressPostLifecycle.BaseUrl}/posts/{createdPost.Id}", updateData, WordPressPostLifecycle.client);
+            var editResponse = await UniversalMethods.SendPutRequest($"{WordPressPostLifecycle.BaseUrl}/posts/{createdPost.Id}", WordPressPostLifecycle.client,updateData);
 
             var editTime = (DateTime.Now - editStartTime).TotalMilliseconds;
 
@@ -177,26 +190,11 @@ namespace WordPressApiTests
 
             var nonExistentId = 9999999999999999;
 
-            var errorData = new
-
-            {
-
-                title = "This should fail",
-
-                content = "This update should fail"
-
-            };
- 
-            var errorResponse = await UniversalMethods.SendPutRequest($"{WordPressPostLifecycle.BaseUrl}/posts/{nonExistentId}",errorData,WordPressPostLifecycle.client);
+            var errorResponse = await UniversalMethods.SendPutRequest($"{WordPressPostLifecycle.BaseUrl}/posts/{nonExistentId}",WordPressPostLifecycle.client);
 
             Assert.That(UniversalMethods.IsStatusCodeNotFound(errorResponse));
-
-
-            var invalidData = new
-
-            {};
  
-            var invalidResponse = await UniversalMethods.SendPostRequest($"{WordPressPostLifecycle.BaseUrl}/posts", invalidData,WordPressPostLifecycle.client);
+            var invalidResponse = await UniversalMethods.SendInvalidPostRequest($"{WordPressPostLifecycle.BaseUrl}/posts",WordPressPostLifecycle.client);
 
             Assert.That(UniversalMethods.IsStatusCodeBadRequest(invalidResponse));
 

@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.ObjectModel;
 
 namespace WordPress.Configs.UniversalMethods
 {
@@ -11,16 +12,49 @@ public static async Task<HttpResponseMessage> SendGetRequest(string url, HttpCli
             return await client.GetAsync(url);
         }
 
-        public static async Task<HttpResponseMessage> SendPostRequest(string url, object payload, HttpClient client)
+        public static async Task<HttpResponseMessage> SendPostRequest(string url, HttpClient client, object payload = null)
+        {if(payload == null){
+            payload = new
+
+            {
+
+                title = "Default post title",
+
+                content = "Default post content",
+
+                status = "publish"
+
+            };
+        }
+            var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+            return await client.PostAsync(url, content);
+        }
+        public static async Task<HttpResponseMessage> SendInvalidPostRequest(string url,  HttpClient client)
         {
+            var payload = new
+
+            {};
             var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
             return await client.PostAsync(url, content);
         }
 
-        public static async Task<HttpResponseMessage> SendPutRequest(string url, object payload, HttpClient client)
+        public static async Task<HttpResponseMessage> SendPutRequest(string url, HttpClient client, object payload = null)
         {
+            if (payload == null)
+            {
+                payload = new
+            
+            {
+
+                title = "Default updated Post",
+
+                content = "Default Updated content for lifecycle testing"
+
+            };
+            }
             var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
             return await client.PutAsync(url, content);
+            
         }
 
         public static async Task<HttpResponseMessage> SendDeleteRequest(string url, HttpClient client)
