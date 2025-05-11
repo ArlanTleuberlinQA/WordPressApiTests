@@ -1,0 +1,66 @@
+using System.Net;
+using System.Text;
+using System.Text.Json;
+
+namespace WordPress.Configs.UniversalMethods
+{
+    public static class UniversalMethods
+    {
+public static async Task<HttpResponseMessage> SendGetRequest(string url, HttpClient client)
+        {
+            return await client.GetAsync(url);
+        }
+
+        public static async Task<HttpResponseMessage> SendPostRequest(string url, object payload, HttpClient client)
+        {
+            var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+            return await client.PostAsync(url, content);
+        }
+
+        public static async Task<HttpResponseMessage> SendPutRequest(string url, object payload, HttpClient client)
+        {
+            var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+            return await client.PutAsync(url, content);
+        }
+
+        public static async Task<HttpResponseMessage> SendDeleteRequest(string url, HttpClient client)
+        {
+            return await client.DeleteAsync(url);
+        }
+
+        public static async Task<T> DeserializeResponse<T>(HttpResponseMessage response)
+        {
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<T>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+            }
+            public static bool IsStatusCodeOk(HttpResponseMessage response)
+            {
+                return response.StatusCode == HttpStatusCode.OK;
+            }
+            public static bool IsStatusCodeCreated(HttpResponseMessage response)
+            {
+                return response.StatusCode == HttpStatusCode.Created;
+            }
+            public static bool IsStatusCodeNotFound(HttpResponseMessage response)
+            {
+                return response.StatusCode == HttpStatusCode.NotFound;
+            }
+            public static bool IsStatusCodeBadRequest(HttpResponseMessage response)
+            {
+                return response.StatusCode == HttpStatusCode.BadRequest;
+            }
+            public static void LogOperationTimes(double createTime, double editTime, double deleteTime)
+    {
+        double totalTime = createTime + editTime + deleteTime;
+
+        Console.WriteLine($"Create time: {createTime}ms");
+        Console.WriteLine($"Edit time: {editTime}ms");
+        Console.WriteLine($"Delete time: {deleteTime}ms");
+        Console.WriteLine($"Total time: {totalTime}ms");
+    }
+}
+
+}
