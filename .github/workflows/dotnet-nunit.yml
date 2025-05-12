@@ -31,9 +31,8 @@ jobs:
  
     - name: Build project
       run: dotnet build --no-restore --configuration Release
-      
-    - name: Set the working directory to where the .sln file is
-      run: cd /home/runner/work/WordPressApiTests
 
+    - name: Set the working directory to where the .sln file is
+      run: cd /home/runner/work
     - name: Run tests
       run: dotnet test --no-build --verbosity normal
