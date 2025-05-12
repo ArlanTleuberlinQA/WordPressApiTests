@@ -35,4 +35,4 @@ jobs:
     - name: Set the working directory to where the .sln file is
       run: cd /home/runner/work
     - name: Run tests
-      run: dotnet test /home/runner/work/WordPressApiTests/WordPressApiTests/api_learning.sln --no-build --verbosity normal
+      run: dotnet test /home/runner/work/WordPressApiTests/WordPressApiTests/api_learning.csproj --no-build --verbosity normal
