@@ -18,6 +18,7 @@ jobs:
         run: dotnet Restore
 
       - name: Build project
-        run: dotnet Build
+        run: dotnet build --no-restore --configuration Release
+ 
       - name: Run test
-        run: dotnet test
+        run: dotnet test --no-build --configuration Release --logger "console;verbosity=normal"
