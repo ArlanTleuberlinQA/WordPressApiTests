@@ -66,6 +66,14 @@ namespace WordPressApiTests
             Assert.That(UniversalMethods.IsStatusCodeOk(fastEditResponse));
             var fastUpdatedPost = await UniversalMethods.DeserializeResponse<WordPressPost>(fastEditResponse);
             Assert.That(fastUpdatedPost.Id, Is.EqualTo(fastCreatedPost.Id), "Post ID should remain the same");
+            Assert.That(fastUpdatedPost.Title.Rendered,Is.Not.EqualTo(fastCreatedPost.Title.Rendered), "Titles shoud be different");
+            Assert.That(fastUpdatedPost.Content.Rendered,Is.Not.EqualTo(fastCreatedPost.Content.Rendered), "Cocntent should be different");
+            var fastThrashResponse = await UniversalMethods.SendDeleteRequest($"{WordPressPostLifecycle.BaseUrl}/posts/{fastCreatedPost.Id}?",WordPressPostLifecycle.client);
+            Assert.That(UniversalMethods.IsStatusCodeOk(fastThrashResponse));
+            var getThrashedResponse = await UniversalMethods.SendGetRequest($"{WordPressPostLifecycle.BaseUrl}/posts/{fastCreatedPost.Id}",WordPressPostLifecycle.client);
+            Assert.That(UniversalMethods.IsStatusCodeOk(getThrashedResponse));
+            var fastThrashedPost = await UniversalMethods.DeserializeResponse<WordPressPost>(getThrashedResponse);
+            Assert.That(fastThrashedPost.Status,Is.EqualTo("trash"));
 
         }
  
@@ -146,7 +154,7 @@ namespace WordPressApiTests
  
             
 
-            var getResponse = await WordPressPostLifecycle.client.GetAsync($"{WordPressPostLifecycle.BaseUrl}/posts/{createdPost.Id}");
+            var getResponse = await UniversalMethods.SendGetRequest($"{WordPressPostLifecycle.BaseUrl}/posts/{createdPost.Id}",WordPressPostLifecycle.client);
 
             Assert.That(UniversalMethods.IsStatusCodeOk(getResponse), "Should be able to get updated post");
 
@@ -164,7 +172,7 @@ namespace WordPressApiTests
 
             var deleteStartTime = DateTime.Now;
 
-            var deleteResponse = await UniversalMethods.SendDeleteRequest($"{WordPressPostLifecycle.BaseUrl}/posts/{createdPost.Id}",WordPressPostLifecycle.client);
+            var deleteResponse = await UniversalMethods.SendDeleteRequest($"{WordPressPostLifecycle.BaseUrl}/posts/{createdPost.Id}?force=true",WordPressPostLifecycle.client);
 
             var deleteTime = (DateTime.Now - deleteStartTime).TotalMilliseconds;
 
@@ -174,7 +182,7 @@ namespace WordPressApiTests
  
             
 
-            var checkDeletedResponse = await WordPressPostLifecycle.client.GetAsync($"{WordPressPostLifecycle.BaseUrl}/posts/{createdPost.Id}force=true");
+            var checkDeletedResponse = await UniversalMethods.SendGetRequest($"{WordPressPostLifecycle.BaseUrl}/posts/{createdPost.Id}",WordPressPostLifecycle.client);
 
             Assert.That(UniversalMethods.IsStatusCodeNotFound(checkDeletedResponse), "Deleted post should not be accessible");
  
