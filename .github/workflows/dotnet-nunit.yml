@@ -31,9 +31,9 @@ jobs:
  
     - name: Build project
       run: dotnet build --no-restore --configuration Release
-
-    - name: Change space
-      run: cd .
+      
+    - name: Set the working directory to where the .sln file is
+      run: cd /home/runner/work/WordPressApiTests
 
     - name: Run tests
       run: dotnet test --no-build --verbosity normal
