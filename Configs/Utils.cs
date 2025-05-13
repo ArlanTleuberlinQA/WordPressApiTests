@@ -54,7 +54,7 @@ public static PostPayload LoadPayloadFromFile(string relativePath)
         {
             if (payload == null)
             {
-                payload = LoadPayloadFromFile("G:/api_learning/WordPress/Configs/PutPayload.json");
+                payload = LoadPayloadFromFile("Configs/PutPayload.json");
             
             // {
 
