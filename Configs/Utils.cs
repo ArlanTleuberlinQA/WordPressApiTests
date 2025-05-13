@@ -12,6 +12,7 @@ public static async Task<HttpResponseMessage> SendGetRequest(string url, HttpCli
         {
             return await client.GetAsync(url);
         }
+
     public static string GetProjectRoot()
 {
     var baseDir = AppContext.BaseDirectory;

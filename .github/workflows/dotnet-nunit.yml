@@ -30,7 +30,7 @@ jobs:
       run: dotnet restore
  
     - name: Build project
-      run: dotnet build api_learning.csproj --no-restore --configuration Debug
+      run: dotnet build api_learning.csproj --no-restore --configuration Release
 
     - name: Run tests
-      run: dotnet test api_learning.csproj --no-build --verbosity normal
+      run: dotnet test api_learning.csproj --no-build --verbosity normal Release
