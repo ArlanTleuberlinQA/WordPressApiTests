@@ -12,20 +12,22 @@ public static async Task<HttpResponseMessage> SendGetRequest(string url, HttpCli
         {
             return await client.GetAsync(url);
         }
+        public class PostPayload
+{
+    public string title { get; set; }
+    public string content { get; set; }
+    public string status { get; set; }
+}
+public static PostPayload LoadPayloadFromFile(string filePath)
+{
+    var json = File.ReadAllText(filePath);
+    return JsonSerializer.Deserialize<PostPayload>(json);
+}
+
 
         public static async Task<HttpResponseMessage> SendPostRequest(string url, HttpClient client, object payload = null)
         {if(payload == null){
-            payload = new
-
-            {
-
-                title = "Default post title",
-
-                content = "Default post content",
-
-                status = "publish"
-
-            };
+            payload = LoadPayloadFromFile("G:/api_learning/WordPress/Configs/PostPayload.json");
         }
             var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
             return await client.PostAsync(url, content);
@@ -43,15 +45,15 @@ public static async Task<HttpResponseMessage> SendGetRequest(string url, HttpCli
         {
             if (payload == null)
             {
-                payload = new
+                payload = LoadPayloadFromFile("G:/api_learning/WordPress/Configs/PutPayload.json");
             
-            {
+            // {
 
-                title = "Default updated Post",
+            //     title = "Default updated Post",
 
-                content = "Default Updated content for lifecycle testing"
+            //     content = "Default Updated content for lifecycle testing"
 
-            };
+            // };
             }
             var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
             return await client.PutAsync(url, content);
