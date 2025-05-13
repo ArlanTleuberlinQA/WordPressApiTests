@@ -12,22 +12,31 @@ public static async Task<HttpResponseMessage> SendGetRequest(string url, HttpCli
         {
             return await client.GetAsync(url);
         }
+    public static string GetProjectRoot()
+{
+    var baseDir = AppContext.BaseDirectory;
+    return Directory.GetParent(baseDir)!.Parent!.Parent!.Parent!.FullName;
+}
+
         public class PostPayload
 {
     public string title { get; set; }
     public string content { get; set; }
     public string status { get; set; }
 }
-public static PostPayload LoadPayloadFromFile(string filePath)
+public static PostPayload LoadPayloadFromFile(string relativePath)
 {
-    var json = File.ReadAllText(filePath);
+    var projectRoot = GetProjectRoot();
+    var fullPath = Path.Combine(projectRoot, relativePath);
+    var json = File.ReadAllText(fullPath);
     return JsonSerializer.Deserialize<PostPayload>(json);
 }
 
 
+
         public static async Task<HttpResponseMessage> SendPostRequest(string url, HttpClient client, object payload = null)
         {if(payload == null){
-            payload = LoadPayloadFromFile("G:/api_learning/WordPress/Configs/PostPayload.json");
+            payload = LoadPayloadFromFile("Configs/PostPayload.json");
         }
             var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
             return await client.PostAsync(url, content);
