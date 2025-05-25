@@ -1,13 +1,12 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.ObjectModel;
-using Bogus;
 
 namespace WordPress.Configs.UniversalMethods
 {
     public static class UniversalMethods
     {
+        
 public static async Task<HttpResponseMessage> SendGetRequest(string url, HttpClient client)
         {
             return await client.GetAsync(url);

@@ -1,9 +1,9 @@
 {
 
-                "title": "Default post title",
+    "title": "Default post title",
 
-                "content": "Default post content",
+    "content": "Default post content",
 
-                "status": "publish"
+    "status": "publish"
 
 }

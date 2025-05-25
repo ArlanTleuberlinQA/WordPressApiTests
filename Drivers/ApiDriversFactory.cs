@@ -1,5 +1,4 @@
 using System.Text;
-using Microsoft.VisualBasic;
 
 namespace WordPress.Drivers.DriverFactory
 {
