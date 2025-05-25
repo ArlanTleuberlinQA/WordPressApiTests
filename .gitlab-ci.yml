@@ -27,3 +27,4 @@ test:
   stage: test
   script:
     - dotnet test --no-build --configuration Release --verbosity normal
+    
