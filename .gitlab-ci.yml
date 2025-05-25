@@ -1,29 +1,25 @@
 stages:
   - build
   - test
- 
+
 variables:
   DOTNET_CLI_TELEMETRY_OPTOUT: "1"
   DOTNET_NOLOGO: "true"
- 
+
+image: mcr.microsoft.com/dotnet/sdk:8.0
+
 before_script:
   - echo "Using .NET 8 SDK"
-  - apt-get update && apt-get install -y wget
-  - wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh
-  - bash ./dotnet-install.sh --channel 8.0
-  - export DOTNET_ROOT="$PWD/.dotnet"
-  - export PATH="$DOTNET_ROOT:$PATH"
- 
+  - dotnet --version
+  - dotnet nuget locals all --clear
+  - rm -rf ./bin ./obj
+
 build:
   stage: build
   script:
-    - dotnet --version
-    - dotnet nuget locals all --clear
-    - rm -rf ./bin ./obj
     - dotnet restore
     - dotnet build --no-restore --configuration Release
- 
+
 test:
   stage: test
   script:
-    - dotnet test --no-build --configuration Release --verbosity normal
