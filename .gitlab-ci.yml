@@ -1,26 +1,41 @@
 stages:
+
   - build
+
   - test
-
+ 
 variables:
+
   DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+
   DOTNET_NOLOGO: "true"
-
+ 
 image: mcr.microsoft.com/dotnet/sdk:8.0
-
+ 
 before_script:
+
   - echo "Using .NET 8 SDK"
+
   - dotnet --version
+
   - dotnet nuget locals all --clear
+
   - rm -rf ./bin ./obj
-
+ 
 build:
-  stage: build
-  script:
-    - dotnet restore
-    - dotnet build --no-restore --configuration Release
 
-test:
-  stage: test
+  stage: build
+
   script:
-    - dotnet test --no-build --configuration Release --verbosity normal
+
+    - dotnet restore
+
+    - dotnet build --no-restore --configuration Release
+ 
+test:
+
+  stage: test
+
+  script:
+
+    - dotnet test WordPressApiTests/api_learning.csproj --no-build --configuration Release --logger:"console;verbosity=detailed"
