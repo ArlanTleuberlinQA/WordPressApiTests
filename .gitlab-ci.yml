@@ -1,41 +1,21 @@
 stages:
-
-  - build
-
-  - test
+  - build_and_test
  
 variables:
-
   DOTNET_CLI_TELEMETRY_OPTOUT: "1"
-
   DOTNET_NOLOGO: "true"
  
 image: mcr.microsoft.com/dotnet/sdk:8.0
  
 before_script:
-
   - echo "Using .NET 8 SDK"
-
   - dotnet --version
-
   - dotnet nuget locals all --clear
-
   - rm -rf ./bin ./obj
  
-build:
-
-  stage: build
-
+build_and_test:
+  stage: build_and_test
   script:
-
     - dotnet restore
-
     - dotnet build --no-restore --configuration Release
- 
-test:
-
-  stage: test
-
-  script:
-
-    - dotnet test ./api_learning.sln --no-build --configuration Release --logger:"console;verbosity=detailed"
+    - dotnet test ./api_learning.sln --no-restore --configuration Release --logger:"console;verbosity=detailed"
