@@ -38,4 +38,4 @@ test:
 
   script:
 
-    - dotnet test WordPressApiTests/api_learning.csproj --no-build --configuration Release --logger:"console;verbosity=detailed"
+    - dotnet test ./api_learning.csproj --no-build --configuration Release --logger:"console;verbosity=detailed"
