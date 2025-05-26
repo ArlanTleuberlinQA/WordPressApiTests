@@ -38,4 +38,4 @@ test:
 
   script:
 
-    - dotnet test ./api_learning.csproj --no-build --configuration Release --logger:"console;verbosity=detailed"
+    - dotnet test ./api_learning.sln --no-build --configuration Release --logger:"console;verbosity=detailed"
